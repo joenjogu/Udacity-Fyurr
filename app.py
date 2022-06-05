@@ -143,7 +143,7 @@ def venues():
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
-  # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
+  # DONE: implement search on artists with partial string search. Ensure it is case-insensitive.
   # seach for Hop should return "The Musical Hop".
   # search for "Music" should return "The Musical Hop" and "Park Square Live Music & Coffee"
   response={
@@ -333,7 +333,7 @@ def artists():
 
 @app.route('/artists/search', methods=['POST'])
 def search_artists():
-  # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
+  # DONE: implement search on artists with partial string search. Ensure it is case-insensitive.
   # seach for "A" should return "Guns N Petals", "Matt Quevado", and "The Wild Sax Band".
   # search for "band" should return "The Wild Sax Band".
   response={
@@ -453,6 +453,29 @@ def edit_artist_submission(artist_id):
   # TODO: take values from the form submitted, and update existing
   # artist record with ID <artist_id> using the new attributes
 
+  form = ArtistForm()
+
+  try:
+    if request.method == 'POST' and form.validate():
+      artist = Artist.query.filter_by(id=artist_id).first()
+      artist.name = form.name.data
+      artist.city = form.city.data
+      artist.state = form.state.data
+      artist.genres = form.genres.data
+      if form.phone.data != None: artist.phone = form.phone.data 
+      if form.facebook_link.data != None: artist.facebook_link = form.facebook_link.data 
+      if form.website_link.data != None: artist.website_link = form.website_link.data 
+      if form.image_link.data != None: artist.image_link = form.image_link.data 
+      if form.seeking_description.data != None: artist.seeking_description = form.seeking_description.data 
+      if form.seeking_venue.data != None: artist.seeking_venue = form.seeking_venue.data
+
+      db.session.commit()
+
+  except:
+    db.session.rollback()
+  finally:
+    db.session.close()
+
   return redirect(url_for('show_artist', artist_id=artist_id))
 
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
@@ -479,6 +502,31 @@ def edit_venue(venue_id):
 def edit_venue_submission(venue_id):
   # TODO: take values from the form submitted, and update existing
   # venue record with ID <venue_id> using the new attributes
+
+  form = VenueForm()
+
+  try:
+    if request.method == 'POST' and form.validate():
+      venue = Venue.query.filter_by(id=venue_id).first()
+      venue.name = form.name.data
+      venue.city = form.city.data
+      venue.state = form.state.data
+      venue.genres = form.genres.data 
+      if form.phone.data != None: venue.phone = form.phone.data 
+      if form.facebook_link.data != None: venue.facebook_link = form.facebook_link.data 
+      if form.website_link.data != None: venue.website_link = form.website_link.data 
+      if form.image_link.data != None: venue.image_link = form.image_link.data 
+      if form.seeking_description.data != None: venue.seeking_description = form.seeking_description.data 
+      if form.seeking_talent.data != None: venue.seeking_talent = form.seeking_talent.data
+
+      db.session.commit()
+
+  except:
+    db.session.rollback()
+  finally:
+    db.session.close()
+
+
   return redirect(url_for('show_venue', venue_id=venue_id))
 
 #  Create Artist
