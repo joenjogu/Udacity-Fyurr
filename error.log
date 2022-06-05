@@ -1,4 +1,20 @@
 <<<<<<< Updated upstream
 
+<<<<<<< HEAD
 =======
 >>>>>>> Stashed changes
+=======
+2022-06-05 03:48:40,211 INFO: errors [in /home/joe/JOB/fyurr/cd0046-SQL-and-Data-Modeling-for-the-Web/app.py:570]
+2022-06-05 03:53:29,361 INFO: errors [in /home/joe/JOB/fyurr/cd0046-SQL-and-Data-Modeling-for-the-Web/app.py:569]
+2022-06-05 03:56:28,427 INFO: errors [in /home/joe/JOB/fyurr/cd0046-SQL-and-Data-Modeling-for-the-Web/app.py:570]
+2022-06-05 03:57:06,221 INFO: errors [in /home/joe/JOB/fyurr/cd0046-SQL-and-Data-Modeling-for-the-Web/app.py:570]
+2022-06-05 03:59:06,755 INFO: errors [in /home/joe/JOB/fyurr/cd0046-SQL-and-Data-Modeling-for-the-Web/app.py:570]
+2022-06-05 04:04:51,968 INFO: errors [in /home/joe/JOB/fyurr/cd0046-SQL-and-Data-Modeling-for-the-Web/app.py:583]
+2022-06-05 04:06:56,402 INFO: errors [in /home/joe/JOB/fyurr/cd0046-SQL-and-Data-Modeling-for-the-Web/app.py:583]
+2022-06-05 04:41:18,402 INFO: errors [in /home/joe/JOB/fyurr/cd0046-SQL-and-Data-Modeling-for-the-Web/app.py:596]
+2022-06-05 04:56:50,048 INFO: errors [in /home/joe/JOB/fyurr/cd0046-SQL-and-Data-Modeling-for-the-Web/app.py:615]
+2022-06-05 05:02:22,111 INFO: errors [in /home/joe/JOB/fyurr/cd0046-SQL-and-Data-Modeling-for-the-Web/app.py:615]
+2022-06-05 05:10:32,774 INFO: errors [in /home/joe/JOB/fyurr/cd0046-SQL-and-Data-Modeling-for-the-Web/app.py:620]
+>>>>>>> dev
+2022-06-05 15:59:37,310 INFO: errors [in app.py:685]
+2022-06-05 15:59:37,700 INFO: errors [in /home/joe/JOB/fyurr/cd0046-SQL-and-Data-Modeling-for-the-Web/app.py:685]
