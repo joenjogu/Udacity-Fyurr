@@ -50,6 +50,9 @@ class Venue(db.Model):
     seeking_talent = db.Column(db.Boolean)
     seeking_description = db.Column(db.String(120))
 
+    def __repr__(self) -> str:
+      return {'id':self.id, 'name':self.name}
+
 
     # DONE: implement any missing fields, as a database migration using Flask-Migrate
 
@@ -67,6 +70,9 @@ class Artist(db.Model):
     website_link = db.Column(db.String(120))
     seeking_venue = db.Column(db.Boolean)
     seeking_description = db.Column(db.String(120))
+
+    def __repr__(self) -> str:
+      return {'id':self.id, 'name':self.name}
 
     # DONE: implement any missing fields, as a database migration using Flask-Migrate
 
@@ -148,7 +154,12 @@ def search_venues():
       "num_upcoming_shows": 0,
     }]
   }
-  return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
+
+  term = request.form.get('search_term', '')
+
+  query = Venue.query.filter(Venue.name.ilike(f'%{term}%'))
+  db_response = {'count':query.count(), 'data':query.all()}
+  return render_template('pages/search_venues.html', results=db_response, search_term=request.form.get('search_term', ''))
 
 @app.route('/venues/<int:venue_id>')
 def show_venue(venue_id):
@@ -333,7 +344,10 @@ def search_artists():
       "num_upcoming_shows": 0,
     }]
   }
-  return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
+  search_term=request.form.get('search_term', '')
+  query = Artist.query.filter(Artist.name.ilike(f'%{search_term}%'))
+  db_response = {'count':query.count(), 'data':query.all()}
+  return render_template('pages/search_artists.html', results=db_response, search_term=request.form.get('search_term', ''))
 
 @app.route('/artists/<int:artist_id>')
 def show_artist(artist_id):
@@ -478,12 +492,12 @@ def create_artist_form():
 @app.route('/artists/create', methods=['POST'])
 def create_artist_submission():
   # called upon submitting the new artist listing form
-  # TODO: insert form data as a new Venue record in the db, instead
+  # DONE: insert form data as a new Venue record in the db, instead
   # TODO: modify data to be the data object returned from db insertion
 
   # on successful db insert, flash success
   flash('Artist ' + request.form['name'] + ' was successfully listed!')
-  # TODO: on unsuccessful db insert, flash an error instead.
+  # DONE: on unsuccessful db insert, flash an error instead.
   # e.g., flash('An error occurred. Artist ' + data.name + ' could not be listed.')
 
   form = ArtistForm(request.form)
