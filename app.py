@@ -15,6 +15,8 @@ from logging import Formatter, FileHandler
 from flask_wtf import FlaskForm
 from forms import *
 from flask_migrate import Migrate
+import sys
+import sys
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
@@ -49,6 +51,7 @@ class Venue(db.Model):
     website_link = db.Column(db.String(120))
     seeking_talent = db.Column(db.Boolean)
     seeking_description = db.Column(db.String(120))
+    shows = db.relationship('Show', backref='venue', lazy=True)
 
     def __repr__(self) -> str:
       return {'id':self.id, 'name':self.name}
@@ -70,6 +73,7 @@ class Artist(db.Model):
     website_link = db.Column(db.String(120))
     seeking_venue = db.Column(db.Boolean)
     seeking_description = db.Column(db.String(120))
+    shows = db.relationship('Show', backref='artist', lazy=True)
 
     def __repr__(self) -> str:
       return {'id':self.id, 'name':self.name}
@@ -82,9 +86,12 @@ class Show(db.Model):
   __tablename__ = 'show'
 
   id = db.Column(db.Integer, primary_key=True)
-  artist_id = db.Column(db.Integer)
-  venue_id = db.Column(db.Integer)
+  artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'), nullable=False)
+  venue_id = db.Column(db.Integer, db.ForeignKey('venue.id'), nullable=False)
   start_time = db.Column(db.DateTime)
+
+  def __repr__(self) -> str:
+      return f"id:{self.id} name:{self.artist_id}"
 
 #----------------------------------------------------------------------------#
 # Filters.
@@ -424,8 +431,39 @@ def show_artist(artist_id):
     "past_shows_count": 0,
     "upcoming_shows_count": 3,
   }
-  data = list(filter(lambda d: d['id'] == artist_id, [data1, data2, data3]))[0]
-  return render_template('pages/show_artist.html', artist=data)
+  # data = list(filter(lambda d: d['id'] == artist_id, [data1, data2, data3]))[0]
+  query_filter = db.session.query(
+    Artist, Show, Venue
+    ).filter(
+      Artist.id == Show.artist_id
+      ).filter(
+        Show.venue_id == Venue.id
+        ).filter(
+          Artist.id == artist_id
+          ).all()
+  artist: Artist = query_filter[0][0]
+  show = query_filter[0][1]
+  venue = query_filter[0][2]
+
+
+
+  db_data = {
+    'id':artist.id,
+    'name':artist.name, 
+    'genres':[], 
+    'city':artist.city, 
+    'state':artist.state, 
+    'phone':artist.phone, 
+    'seeking_venue':artist.seeking_venue,
+    'image_link':artist.image_link,
+    'website_link':artist.website_link,
+    'facebook_link':artist.facebook_link,
+    'past_shows':[],
+    'upcoming_shows':[],
+    'past_shows_count':0,
+    'upcoming_shows_count':0
+    }
+  return render_template('pages/show_artist.html', artist=db_data)
 
 #  Update
 #  ----------------------------------------------------------------
