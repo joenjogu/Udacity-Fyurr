@@ -4,7 +4,9 @@
 
 from binhex import FInfo
 import json
+from os import name
 from pickle import APPEND
+from turtle import st
 import dateutil.parser
 import babel
 from flask import Flask, render_template, request, Response, flash, redirect, url_for
@@ -144,11 +146,43 @@ def venues():
       "num_upcoming_shows": 0,
     }]
   }]
+  # query_filter = db.session.query(
+  #   Venue, Show
+  # ).filter(
+  #   Venue.id == Show.venue_id
+  # ).all()
+  query_select = db.session.query(Venue.city).distinct().all()
+  print(f'query: {query_select}', file=sys.stdout)
 
-  query = Venue.query.with_entities(Venue.city, Venue.state, Venue.name).group_by(Venue.city).all()
-  # print(f'query: {query}', file=sys.stdout)
+  for city in query_select:
+    print(f'city: {city[0]}', file=sys.stdout)
+    result_city = city[0]
+    venues = Venue.query.filter_by(city=f'{result_city}').all()
+    venues = Venue.query.filter_by(city=f'{result_city}').filter().all()
+    print(f'city: {venues}', file=sys.stdout)
+    city_venues = {}
+    venues_list = []
+    for venue in venues:
+      print(f'venue: {venue.id}', file=sys.stdout)
+      city_venues['state'] = venue.state
+      num_of_shows = Show.query.filter_by(
+        venue_id=venue.id
+        ).filter(
+          Show.start_time>datetime.now()
+          ).count()
 
-  return render_template('pages/venues.html', areas=data);
+      print(f'shows: {num_of_shows}', file=sys.stdout)
+      venue_dict = {
+        'id':venue.id,
+        'name':venue.name,
+        'num_upcoming_shows':num_of_shows
+      }
+      venues_list.append(venue_dict)
+      city_venues['city'] = result_city
+      city_venues['venues'] = venues_list
+    print(f'venues list: {city_venues}', file=sys.stdout)
+  
+  return render_template('pages/venues.html', areas=[city_venues]);
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
@@ -649,10 +683,10 @@ def edit_venue(venue_id):
 
 @app.route('/venues/<int:venue_id>/edit', methods=['POST'])
 def edit_venue_submission(venue_id):
-  # TODO: take values from the form submitted, and update existing
+  # DONE: take values from the form submitted, and update existing
   # venue record with ID <venue_id> using the new attributes
 
-  form = VenueForm()
+  form = VenueForm(request.form)
 
   try:
     if request.method == 'POST' and form.validate():
@@ -690,7 +724,7 @@ def create_artist_form():
 def create_artist_submission():
   # called upon submitting the new artist listing form
   # DONE: insert form data as a new Venue record in the db, instead
-  # TODO: modify data to be the data object returned from db insertion
+  # DONE: modify data to be the data object returned from db insertion
 
   # on successful db insert, flash success
   
@@ -732,7 +766,7 @@ def create_artist_submission():
 @app.route('/shows')
 def shows():
   # displays list of shows at /shows
-  # TODO: replace with real venues data.
+  # DONE: replace with real venues data.
   data=[{
     "venue_id": 1,
     "venue_name": "The Musical Hop",
