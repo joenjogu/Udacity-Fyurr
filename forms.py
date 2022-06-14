@@ -1,8 +1,12 @@
 from datetime import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, \
-    SelectField, SelectMultipleField, \
-    DateTimeField, BooleanField
+from wtforms import (
+    StringField,
+    SelectField,
+    SelectMultipleField,
+    DateTimeField,
+    BooleanField
+)
 from wtforms.validators import DataRequired, URL
 
 genres_choices = [
